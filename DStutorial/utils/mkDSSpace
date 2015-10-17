@@ -1,0 +1,28 @@
+#Run pipeline to create DS semantic space
+# $1 is the text file to process
+# $2 is the size of the context window
+
+filename=`echo $1|sed "s/.*data.//"|sed "s/\.[^\.]*//"`
+sed -i "s/input=.*/input=\.\.\/data\/$filename/" ./create-space/config.cfg
+
+#Run tagger
+echo "Running tagger on $1..."
+python ./create-space/runTextBlobTagger.py $1 ../data/$filename.tagged
+
+#getcofreqs.py needs one word per line. We also assume coarse POS tags and we only consider verbs, nouns, adjectives and adverbs
+cat ../data/$filename.tagged|tr ' ' '\n'|sed "s/\(_.\).*/\1/"|egrep "_V|_N|_J|_R" > ../data/$filename
+
+#Compute freqs and cofreqs
+echo "Computing frequencies and co-occurrence frequencies for $1 (window size +/- $2 around target)..."
+python ./create-space/getcofreqs.py ../data/$filename $2
+
+#Write out a column file, with all words as contexts.
+echo "Writing row and column files..."
+cat ../data/$filename|sed "s/.* //" > ../data/$filename.cols
+cp ../data/$filename.cols ../data/$filename.rows
+
+#Computing semantic space
+echo "Computing semantic space (result in out/ directory)..."
+python ~/dissect/src/pipelines/build_core_space.py ./create-space/config.cfg
+
+rm -f ../data/$filename
