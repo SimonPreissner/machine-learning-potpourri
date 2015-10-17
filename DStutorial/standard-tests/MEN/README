@@ -1,0 +1,3 @@
+Correlations tests are run using
+
+c=500; while [ $c -lt 5500 ]; do echo $c; python spearman.py ../../data/pride/out/rows500/CORE_SS.pride.$c.ppmi.row.pkl MEN_dataset_lemma_form_full_gold.txt |egrep -v "Row string| 0.0$"; c=`expr $c + 500`; done > pride.correlations.rows.500
