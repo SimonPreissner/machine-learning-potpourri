@@ -5,4 +5,4 @@ cython==0.20.1
 sparsesvd==0.2.2
 textblob==0.9.1
 -e git+https://github.com/sloria/textblob-aptagger.git@92a9b99f6f49cf8137212b8fab4555f35d196a11#egg=textblob-aptagger-master
--e git+https://github.com/composes-toolkit/dissect.git
+git+https://github.com/composes-toolkit/dissect.git
