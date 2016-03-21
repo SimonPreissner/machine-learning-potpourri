@@ -19,8 +19,8 @@ python ./create-space/getcofreqs.py ../data/$filename $2
 #Write out a column file, with all words as contexts.
 echo "Writing row and column files..."
 head -10000 ../data/$filename |sed "s/.* //" > ../data/$filename.cols
-#cat ../data/$filename|sed "s/.* //" > ../data/$filename.cols
-cp ../data/$filename.cols ../data/$filename.rows
+cat ../data/$filename|sed "s/.* //" > ../data/$filename.rows
+
 
 #Computing semantic space
 echo "Computing semantic space (result in spaces/ directory)..."
