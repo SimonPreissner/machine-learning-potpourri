@@ -19,7 +19,7 @@ plus=sys.argv[4]
 space = io_utils.load(pkl)
 
 # instantiate an additive and subtractive model
-add = WeightedAdditive(alpha = 1, beta = 1.2)
+add = WeightedAdditive(alpha = 1, beta = 1)
 sub = WeightedAdditive(alpha = 1, beta = -1)
 
 
