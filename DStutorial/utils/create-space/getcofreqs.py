@@ -1,6 +1,7 @@
 #getcofreqs.py
-#USAGE: python getcofreqs [lemma file]
-#EXAMPLE: python getcofreqs lemmas.txt
+#USAGE: python getcofreqs [token file]
+#EXAMPLE: python getcofreqs tokens.txt
+#The token file must contain one token per line.
 #_______
 
 import sys
@@ -13,9 +14,11 @@ cofreqs_dict = {}
 freqs_dict = {}
 
 #Shift window by one word
-def shiftwindow(w):
-  for c in range(win_both_sides):
-    w[c]=w[c+1]			#Shift window up to last element, which remains the same (to be replaced by reading new line in lemma file)
+def shiftwindow(w,i,tokens):
+	for c in range(win_both_sides):
+		w[c]=w[c+1]			#Shift window up to last element, which remains the same (to be replaced by reading new line in lemma file)
+	w[win_both_sides]=tokens[i+win_one_side+1]	#Replace last element in window
+	return w
 
 #Get cofreqs, and while we're at it, count words
 def getcofreqs(w):
@@ -34,25 +37,33 @@ def getcofreqs(w):
         freqs_dict[w[c]]=1
   
 
-#open the lemma file
+#open the token file (one token per line)
 filename=sys.argv[1]
-lemmas=open(filename,"r")
 
-window=[]
+#Token array needs padding with non-words at beginning and end
+tokens=[]
+for c in range(win_one_side):
+	tokens.append('#')
+
+lines=open(filename,"r")
+for t in lines:
+	tokens.append(t.rstrip('\n'))
+lines.close()
+
+for c in range(win_one_side):
+	tokens.append('#')
 
 #Initialise window
-for c in range(win_full):
-	window.append('#')
+window=tokens[0:win_full]
 
-for l in lemmas:
-	#print window
-	shiftwindow(window)
-	#print window
-	window[win_both_sides]=l.rstrip()	#Replace last element in window with new lemma line (last part of shift action)
+for i in range(win_one_side,len(tokens)-win_one_side):
+	#print "Processing",tokens[i],"..."
 	#print window
 	getcofreqs(window)
+	if i+win_one_side+1<len(tokens):
+		window=shiftwindow(window,i,tokens)
+		#print window
 
-lemmas.close()
 
 fcofreqs=open(sys.argv[1]+".sm",'w')
 for el in cofreqs_dict:
