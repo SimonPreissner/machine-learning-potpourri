@@ -16,10 +16,10 @@ cat ../data/$filename.tagged|tr ' ' '\n'|sed "s/\(_.\).*/\1/"|egrep "_V|_N|_J|_R
 echo "Computing frequencies and co-occurrence frequencies for $1 (window size +/- $2 around target)..."
 python ./create-space/getcofreqs.py ../data/$filename $2
 
-#Write out a column file, with all words as contexts.
+#Write out column and row files
 echo "Writing row and column files..."
-head -10000 ../data/$filename |sed "s/.* //" > ../data/$filename.cols
-cat ../data/$filename|sed "s/.* //" > ../data/$filename.rows
+head -10000 ../data/$filename.freqs |sed "s/.* //" > ../data/$filename.cols
+cat ../data/$filename.freqs|sed "s/.* //" > ../data/$filename.rows
 
 
 #Computing semantic space
