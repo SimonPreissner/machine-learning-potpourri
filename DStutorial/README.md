@@ -1,5 +1,7 @@
 #Distributional semantics: a very light tutorial
 
+This is a light tutorial in distributional semantics. You will find some slides from my lectures, a bibliography, and also two hands-on practicals in the documents/ directory.
+
 ##Install the build dependencies
 >I recommend using pip for installation:
 
