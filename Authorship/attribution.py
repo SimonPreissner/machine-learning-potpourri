@@ -58,7 +58,9 @@ def apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, te
             if t in conditional_probabilities:
                 for i in range(words[t]):
                     scores[c] += conditional_probabilities[t][c]
-    print(scores)
+    print("\n\nNow printing scores in descending order:")
+    for author in sorted(scores, key=scores.get, reverse=True):
+        print(author,"score:",scores[author])
 
 vocabulary, priors, conditional_probabilities = train_naive_bayes(classes, documents)
-apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, "./data/test/pride.txt")
+apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, sys.argv[1])
