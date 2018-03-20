@@ -1,3 +1,19 @@
+import os
+
+def get_documents():
+    documents = {}
+    files = [os.path.join('./data/training/', f) for f in os.listdir('./data/training/') if os.path.isfile(os.path.join('./data/training/', f))]
+    for f in files:
+        author, doc_length, words = process_document_words(f)
+        documents[f] = [author, doc_length, words]
+    return documents
+
+def extract_vocab(documents):
+    vocabulary = []
+    for values in documents.values():
+        vocabulary += list(values[2].keys())
+    print("First 20 words in the vocabulary:",vocabulary[:20])
+    return vocabulary
 
 def process_document_words(filename):
     words={}

@@ -1,61 +1,64 @@
-import os
 import sys
+import os
 import math
-from utils import process_document_words, process_document_ngrams
-
-ngram_length = 4
-alpha = 0.000001
-
-def process_collection():
-    '''Take table of authors and associated document frequencies
-    to calculate probability of each author.'''
-    author_probabilities = {}
-    author_freqs = {}
-    author_wordcounts = {}
-    files = [os.path.join('./data/training/', f) for f in os.listdir('./data/training/') if os.path.isfile(os.path.join('./data/training/', f))]
-    num_documents = len(files)
-    for f in files:
-        #author, doc_length, words = process_document_words(f)
-        author, doc_length, words = process_document_ngrams(f, ngram_length)
-        if author in author_probabilities:
-            author_probabilities[author] += 1
-            author_wordcounts[author] += doc_length
-            for w,f in words.items():
-                if w in author_freqs[author]:
-                    author_freqs[author][w] += f
-                else:
-                    author_freqs[author][w] = f
-        else:
-            author_probabilities[author] = 1
-            author_wordcounts[author] = doc_length
-            author_freqs[author] = words
-    for author,doc_freq in author_probabilities.items():
-        author_probabilities[author] = doc_freq / num_documents
-    #print(author_probabilities,author_wordcounts, author_freqs.keys())
-    return author_probabilities, author_wordcounts, author_freqs
+from utils import process_document_words, get_documents, extract_vocab
 
 
-def naive_bayes(test_words, author_freqs, author_probabilities, author):
-    '''Run Naive Bayes with test_ngrams = new text\
-    and author = particular value for author.'''
-    nb=0
-    for w,f in test_words.items():  # For each word in the test document
-        w_freq = 0
-        if w in author_freqs[author]:
-            w_freq = author_freqs[author][w]
-        for i in range(f):
-            '''Add to score the log of P(word|author)'''
-            nb += math.log((w_freq + alpha) / (author_wordcounts[author] * (1 + alpha)))
-    nb += math.log(author_probabilities[author])
-    print("NB score for author",author,":",nb)
+alpha = 0.0001
+classes = ["Austen", "Carroll", "Grahame", "Kipling"]
+documents = get_documents()
 
+def count_docs(documents):
+    return len(documents)
 
-#Training
-author_probabilities, author_wordcounts, author_freqs = process_collection()
+def count_docs_in_class(documents, c):
+    count=0
+    for values in documents.values():
+        if values[0] == c:
+            count+=1
+    return count
 
-#Testing
-#author, doc_length, words = process_document_words(sys.argv[1])
-author, doc_length, words = process_document_ngrams(sys.argv[1], ngram_length)
+def concatenate_text_of_all_docs_in_class(documents,c):
+    words_in_class = {}
+    for d,values in documents.items():
+        if values[0] == c:
+            words_in_class.update(values[2])
+    return words_in_class
 
-for a in list(author_probabilities.keys()):
-     naive_bayes(words, author_freqs, author_probabilities, a)
+def train_naive_bayes(classes, documents):
+    vocabulary = extract_vocab(documents)
+    conditional_probabilities = {}
+    for t in vocabulary:
+        conditional_probabilities[t] = {}
+    priors = {}
+    print("\n\n***\nCalculating priors and conditional probabilities for each class...\n***")
+    for c in classes:
+         priors[c] = count_docs_in_class(documents,c) / count_docs(documents)
+         print("\nPrior for",c,priors[c])
+         class_size = count_docs_in_class(documents, c)
+         print("In class",c,"we have",class_size,"document(s).")
+         words_in_class = concatenate_text_of_all_docs_in_class(documents,c)
+         #print(c,words_in_class)
+         print("Calculating conditional probabilities for the vocabulary.")
+         denominator = sum(words_in_class.values())
+         for t in vocabulary:
+             if t in words_in_class:
+                 conditional_probabilities[t][c] = math.log((words_in_class[t] + alpha) / (denominator * (1 + alpha)))
+             else:
+                 conditional_probabilities[t][c] = math.log((0 + alpha) / (denominator * (1 + alpha)))
+             #print(t,c,conditional_probabilities[t][c])
+    return vocabulary, priors, conditional_probabilities
+
+def apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, test_document):
+    scores = {}
+    author, doc_length, words = process_document_words(test_document)
+    for c in classes:
+        scores[c] = math.log(priors[c])
+        for t in words:
+            if t in conditional_probabilities:
+                for i in range(words[t]):
+                    scores[c] += conditional_probabilities[t][c]
+    print(scores)
+
+vocabulary, priors, conditional_probabilities = train_naive_bayes(classes, documents)
+apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, "./data/test/pride.txt")
