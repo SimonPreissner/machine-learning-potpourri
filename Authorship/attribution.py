@@ -1,7 +1,7 @@
 import sys
 import os
 import math
-from utils import process_document_words, get_documents, extract_vocab
+from utils import process_document_words, process_document_ngrams, get_documents, extract_vocab
 
 
 alpha = 0.0001
@@ -43,21 +43,22 @@ def train_naive_bayes(classes, documents):
          denominator = sum(words_in_class.values())
          for t in vocabulary:
              if t in words_in_class:
-                 conditional_probabilities[t][c] = math.log((words_in_class[t] + alpha) / (denominator * (1 + alpha)))
+                 conditional_probabilities[t][c] = (words_in_class[t] + alpha) / (denominator * (1 + alpha))
+                 #print(t,c,words_in_class[t],denominator,conditional_probabilities[t][c])
              else:
-                 conditional_probabilities[t][c] = math.log((0 + alpha) / (denominator * (1 + alpha)))
-             #print(t,c,conditional_probabilities[t][c])
+                 conditional_probabilities[t][c] = (0 + alpha) / (denominator * (1 + alpha))
     return vocabulary, priors, conditional_probabilities
 
 def apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, test_document):
     scores = {}
+    #author, doc_length, words = process_document_ngrams(test_document,3)
     author, doc_length, words = process_document_words(test_document)
     for c in classes:
         scores[c] = math.log(priors[c])
         for t in words:
             if t in conditional_probabilities:
                 for i in range(words[t]):
-                    scores[c] += conditional_probabilities[t][c]
+                    scores[c] += math.log(conditional_probabilities[t][c])
     print("\n\nNow printing scores in descending order:")
     for author in sorted(scores, key=scores.get, reverse=True):
         print(author,"score:",scores[author])

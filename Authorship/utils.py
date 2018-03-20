@@ -4,6 +4,7 @@ def get_documents():
     documents = {}
     files = [os.path.join('./data/training/', f) for f in os.listdir('./data/training/') if os.path.isfile(os.path.join('./data/training/', f))]
     for f in files:
+        #author, doc_length, words = process_document_ngrams(f,3)
         author, doc_length, words = process_document_words(f)
         documents[f] = [author, doc_length, words]
     return documents
