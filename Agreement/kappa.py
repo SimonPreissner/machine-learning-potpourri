@@ -1,13 +1,37 @@
 from nltk.metrics import agreement, ConfusionMatrix
 import itertools
+import sys
+import os
 
-data = [['1', 5723, 'ORG'],['2', 5723, 'ORG'],['3', 5723, 'ORG'],['1', 55829, 'LOC'],['2', 55829, 'LOC'],['3', 55829, 'ORG'],['1', 259742, 'PER'],['2', 259742, 'LOC'],['3',259742,'PER'],['1', 269340, 'PER'],['2', 269340, 'LOC'],['3',269340,'PER']]
-#data = [['1', 5723, 1],['2', 5723, 4],['1', 55829, 1],['2', 55829, 1],['1', 259742, 2],['2', 259742, 4],['1', 269340, 3],['2', 269340, 3]]
+test_data = [['kim', 'Washington', 'PER'],['sandy', 'Washington', 'LOC'],['kim', 'Italy', 'ORG'],['sandy', 'Italy', 'LOC'],['kim', 'Einstein', 'PER'],['sandy', 'Einstein', 'PER'],['kim', 'Rovereto', 'LOC'],['sandy', 'Rovereto', 'LOC'],['kim','Google','ORG'],['sandy', 'Google', 'ORG'],['kim', 'Jupiter', 'LOC'],['sandy','Jupiter','LOC']]
 
-def get_coder_answers(coder_name):
-    return [d[2] for d in data if d[0] == coder_name]
+def load_coders():
+    coders = [f[:-4] for f in os.listdir('./annotations/') if os.path.isfile(os.path.join('./annotations/', f))]
+    return coders
 
-def get_datapoints():
+def load_data(coders):
+    data = []
+
+    for username in coders:
+        input_file = "./annotations/"+username+".txt"
+        f = open(input_file,'r')
+        for l in f:
+            l = l.rstrip('\n')
+            datapoint = l.split("::")[0]
+            answer = l.split("::")[1]
+            data.append([username,datapoint,answer])
+    return data
+
+def get_coder_answers(coder_name, datapoints):
+    print("Getting coder answers for",coder_name,"...")
+    coder_answers = []
+    for i,answers in datapoints.items():
+        for coder, answer in answers.items():
+            if coder == coder_name:
+                coder_answers.append(answer)
+    return coder_answers
+
+def get_datapoints(data):
     datapoints = {}
     for i in data:
         if i[1] not in datapoints:
@@ -15,7 +39,7 @@ def get_datapoints():
         datapoints[i[1]][i[0]] = i[2]
     return datapoints
 
-def get_coders():
+def get_test_coders(data):
     return list(set([d[0] for d in data]))
 
 def get_disagreements(datapoints):
@@ -26,9 +50,28 @@ def get_disagreements(datapoints):
             disagreements[i] = answers
     return disagreements
 
+coders = []
+data = []
 
-coders = get_coders()
+if len(sys.argv) > 1:
+    if sys.argv[1] == "--test":
+        print("Running test kappa...")
+        coders = get_test_coders(test_data)
+        print(coders)
+        data = test_data
+        #print(data)
+    else:
+        print("I don't know this argument. Try again.")
+        exit() 
+
+if len(sys.argv) == 1:
+    coders = load_coders() 
+    print(coders)
+    data = load_data(coders)
+    #print(data)
+
 num_coders = len(coders)
+datapoints = get_datapoints(data)
 
 task = agreement.AnnotationTask(data=data)
 for pair in itertools.combinations(coders, 2):
@@ -36,19 +79,19 @@ for pair in itertools.combinations(coders, 2):
     print("Observed agreement:",task.Ao(pair[0],pair[1]))
     print("Expected agreement:",task.Ae_kappa(pair[0],pair[1]))
     print(task.kappa_pairwise(pair[0],pair[1]))
-    a1 = get_coder_answers(pair[0])
-    a2 = get_coder_answers(pair[1])
+    a1 = get_coder_answers(pair[0], datapoints)
+    a2 = get_coder_answers(pair[1], datapoints)
     cm = ConfusionMatrix(a1,a2)
     print(cm)
 
 print(task.kappa())
+print(task.alpha())
 
 
-datapoints = get_datapoints()
-for i,answers in datapoints.items():
-    print(i,answers)
+#for i,answers in datapoints.items():
+#    print(i,answers)
 
 disagreements = get_disagreements(datapoints)
 
-#for d,answers in disagreements.items():
-#    print(d,answers)
+for d,answers in disagreements.items():
+    print(d,answers)
