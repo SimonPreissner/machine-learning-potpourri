@@ -1,3 +1,21 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+
+from __future__ import division
+from __future__ import unicode_literals
+
+import sys
+
+try:
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+except NameError:
+    pass
+sys.path.append('.')
+sys.path.append('..')
+
+
+
 import sys
 import os
 import math
@@ -64,4 +82,22 @@ def apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, te
         print(author,"score:",scores[author])
 
 vocabulary, priors, conditional_probabilities = train_naive_bayes(classes, documents)
-apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, sys.argv[1])
+try:
+    apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities, sys.argv[1])
+except IndexError:
+    for file_ in ['./data/test/pride.txt','./data/test/second-junglebook.txt']:
+        print ('\n','°'*75, 'test on {}'.format(file_))
+        apply_naive_bayes(classes, vocabulary, priors, conditional_probabilities,file_)
+print ('done')
+
+
+
+
+
+
+
+
+
+
+
+
