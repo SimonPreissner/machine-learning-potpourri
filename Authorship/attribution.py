@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+'''This version integrates sys.path and argument
+checks by Patrizio Bellan.'''
 
 from __future__ import division
 from __future__ import unicode_literals
