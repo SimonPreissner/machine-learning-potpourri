@@ -8,12 +8,15 @@ Before you start, find a friend to annotate with!
 
 Here is some toy annotation produced for a Named Entity Recognition task by two coders, Kim and Sandy.
 
-Washington | PER | LOC
-Italy | ORG | LOC
-Einstein | PER | PER
-Rovereto | LOC | LOC
-Google | ORG | ORG
-Jupiter | LOC | LOC
+<table>
+<tr><td></td><td>Kim</td><td>Sandy</td></tr>
+<tr><td>Washington</td><td>PER</td><td>LOC</td></tr>
+<tr><td>Italy</td><td>ORG</td><td>LOC</td></tr>
+<tr><td>Einstein</td><td>PER</td><td>PER</td></tr>
+<tr><td>Rovereto</td><td>LOC</td><td>LOC</td></tr>
+<tr><td>Google</td><td>ORG</td><td>ORG</td></tr>
+<tr><td>Jupiter</td><td>LOC</td><td>LOC</td></tr>
+</table>
 
 Manually calculate the kappa agreement between Kim and Sandy for this annotation. Then, check your answer by running the following:
 
