@@ -19,7 +19,7 @@ questions = read_questions()
 random.shuffle(questions)
 answers = {}
 
-print("\n\nIn the following, you will find 50 statements about the person above.\nYour task is to say to what extent you agree with the statement, \ngiving a score between 1 and 5 (1=fully disagree, 5=fully agree).\n\nYou may find that some of the statements will have a clear answer, while others \nrequire some guesswork. Don't hesitate to answer based on what you imagine the \nperson to be like. For instance, if the article is on someone who went to drama \nschool and ended up being a famous actor, you may infer that the person is likely\nto know how to dance, even if the Wikipedia article does not say so. There is no \nright or wrong answer, and you can come back to the text as many times as you like \nif it helps you.")
+print("\n\nIn the following, you will find 50 statements about the person you have just read about.\nYour task is to say to what extent you agree with the statement, \ngiving a score between 1 and 5 (1=fully disagree, 5=fully agree).\n\nYou may find that some of the statements will have a clear answer, while others \nrequire some guesswork. Don't hesitate to answer based on what you imagine the \nperson to be like. For instance, if the article is on someone who went to drama \nschool and ended up being a famous actor, you may infer that the person is likely\nto know how to dance, even if the Wikipedia article does not say so. There is no \nright or wrong answer, and you can come back to the text as many times as you like \nif it helps you.")
 
 username = input("\n\nPlease enter your name: ")
 

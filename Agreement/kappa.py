@@ -6,7 +6,7 @@ import os
 test_data = [['kim', 'Washington', 'PER'],['sandy', 'Washington', 'LOC'],['kim', 'Italy', 'ORG'],['sandy', 'Italy', 'LOC'],['kim', 'Einstein', 'PER'],['sandy', 'Einstein', 'PER'],['kim', 'Rovereto', 'LOC'],['sandy', 'Rovereto', 'LOC'],['kim','Google','ORG'],['sandy', 'Google', 'ORG'],['kim', 'Jupiter', 'LOC'],['sandy','Jupiter','LOC']]
 
 def load_coders():
-    coders = [f[:-4] for f in os.listdir('./annotations/') if os.path.isfile(os.path.join('./annotations/', f))]
+    coders = [f[:-4] for f in os.listdir('./annotations/') if os.path.isfile(os.path.join('./annotations/', f)) and f[-4:] == ".txt"]
     return coders
 
 def load_data(coders):
@@ -23,7 +23,7 @@ def load_data(coders):
     return data
 
 def get_coder_answers(coder_name, datapoints):
-    print("Getting coder answers for",coder_name,"...")
+    #print("Getting coder answers for",coder_name,"...")
     coder_answers = []
     for i,answers in datapoints.items():
         for coder, answer in answers.items():
@@ -66,7 +66,7 @@ if len(sys.argv) > 1:
 
 if len(sys.argv) == 1:
     coders = load_coders() 
-    print(coders)
+    #print(coders)
     data = load_data(coders)
     #print(data)
 
@@ -75,21 +75,23 @@ datapoints = get_datapoints(data)
 
 task = agreement.AnnotationTask(data=data)
 for pair in itertools.combinations(coders, 2):
-    print("Coders",pair[0],pair[1])
-    print("Observed agreement:",task.Ao(pair[0],pair[1]))
+    print("\n\n*** Coders",pair[0],pair[1]," ***")
+    print("\nObserved agreement:",task.Ao(pair[0],pair[1]))
     print("Expected agreement:",task.Ae_kappa(pair[0],pair[1]))
-    print(task.kappa_pairwise(pair[0],pair[1]))
+    print("Pairwise kappa:",task.kappa_pairwise(pair[0],pair[1]))
     a1 = get_coder_answers(pair[0], datapoints)
     a2 = get_coder_answers(pair[1], datapoints)
     cm = ConfusionMatrix(a1,a2)
-    print(cm)
+    print("\n",cm)
 
+print("Average kappa for this task:")
 print(task.kappa())
-print(task.alpha())
 
 
 #for i,answers in datapoints.items():
 #    print(i,answers)
+
+print("\n\nNow printing disagreements:")
 
 disagreements = get_disagreements(datapoints)
 
