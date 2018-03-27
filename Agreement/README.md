@@ -22,6 +22,8 @@ Manually calculate the kappa agreement between Kim and Sandy for this annotation
 
     python3 kappa.py --test
 
+Now, switch the first disagreement (Kim says LOC and Sandy says PER). Manually re-calculate. Do you get what you expected?
+
 
 ### Annotation
 
