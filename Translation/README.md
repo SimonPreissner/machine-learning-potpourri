@@ -30,8 +30,19 @@ What can you say about the system's errors? (You may need a Catalan dictionary. 
 
 ### Running the visualisation code
 
-Running the following will create pictures of the Enlglish and Catalan spaces in your directory, split in train and test sets.
+Running the following will create pictures of the English and Catalan spaces in your directory, split in train and test sets.
 
     python3 viz.py
+
+
+You can also visualise the neighbourhood of a word by doing e.g.
+
+    python3 viz.py en bird 20
+
+(This will give you a graph of the 20 nearest neighbours of *bird* in the English space.)
+
+For Catalan, you can similarly do:
+
+    python3 viz.py cat ocell 20
 
 

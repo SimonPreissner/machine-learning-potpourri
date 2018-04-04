@@ -39,8 +39,8 @@ if len(sys.argv) == 4:
     word = sys.argv[2]
     num_neighbours = int(sys.argv[3])
     if lang == "en":
-        english_neighbours = utils.neighbours(english_space,word,num_neighbours)
+        english_neighbours = utils.neighbours(english_space,english_space[word],num_neighbours)
         utils.run_PCA(english_space,[word]+english_neighbours,"english_neighbours.png")
     if lang == "cat":
-        catalan_neighbours = utils.neighbours(catalan_space,word,num_neighbours)
+        catalan_neighbours = utils.neighbours(catalan_space,catalan_space[word],num_neighbours)
         utils.run_PCA(catalan_space,[word]+catalan_neighbours,"catalan_neighbours.png")
