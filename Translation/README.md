@@ -22,12 +22,16 @@ The output first gives the predictions for each pair:
 
 Here, *bird* should have been translated with *ocell*. The 5 nearest neighbours of the predicted vector are *arbre, peix, ocell, gos* and *animal*, meaning the gold translation can be found in those close neighbours.
 
-The last line gives the precision @ $k$, where $k$ is the number of nearest neighbours considered for evaluation.
+The last line gives the precision @ *k*, where *k* is the number of nearest neighbours considered for evaluation.
 
 What can you say about the system's errors? (You may need a Catalan dictionary. Here's a good one: *https://www.diccionaris.cat/*.)
 
 
 
 ### Running the visualisation code
+
+Running the following will create pictures of the Enlglish and Catalan spaces in your directory, split in train and test sets.
+
+    python3 viz.py
 
 
