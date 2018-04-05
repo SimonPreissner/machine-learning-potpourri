@@ -56,7 +56,7 @@ def make_figure(m_2d, labels):
     existing_m_2d.columns = ['PC1','PC2']
     existing_m_2d.head()
 
-    ax = existing_m_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(20,12), c=range(len(existing_m_2d)), colormap=cmap, linewidth=0, legend=False)
+    ax = existing_m_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(30,18), c=range(len(existing_m_2d)), colormap=cmap, linewidth=0, legend=False)
     ax.set_xlabel("A dimension of meaning")
     ax.set_ylabel("Another dimension of meaning")
 

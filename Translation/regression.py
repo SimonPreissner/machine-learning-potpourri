@@ -16,7 +16,7 @@ def mk_training_matrices(pairs, en_dimension, cat_dimension, english_space, cata
 
 def linalg(mat_english,mat_catalan):
     w = np.linalg.lstsq(mat_english,mat_catalan)[0] # obtaining the parameters
-    #print(w.shape)
+    print(mat_english.shape,mat_catalan.shape,w.shape)
     return w
 
 
@@ -38,8 +38,8 @@ for l in f:
 f.close()
 
 '''Make training/test fold'''
-training_pairs = all_pairs[:100]
-test_pairs = all_pairs[101:]
+training_pairs = all_pairs[:120]
+test_pairs = all_pairs[121:]
 
 '''Make training/test matrices'''
 en_mat, cat_mat = mk_training_matrices(training_pairs, 400, 300, english_space, catalan_space)

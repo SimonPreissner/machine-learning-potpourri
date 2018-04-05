@@ -26,13 +26,8 @@ for l in f:
     all_pairs.append(l)
 f.close()
 
-'''Make training/test fold'''
-training_pairs = all_pairs[:100]
-test_pairs = all_pairs[101:]
-utils.run_PCA(english_space,[p.split()[0] for p in training_pairs],"english_train.png")
-utils.run_PCA(catalan_space,[p.split()[1] for p in training_pairs],"catalan_train.png")
-utils.run_PCA(english_space,[p.split()[0] for p in test_pairs],"english_test.png")
-utils.run_PCA(catalan_space,[p.split()[1] for p in test_pairs],"catalan_test.png")
+utils.run_PCA(english_space,[p.split()[0] for p in all_pairs],"english_space.png")
+utils.run_PCA(catalan_space,[p.split()[1] for p in all_pairs],"catalan_space.png")
 
 if len(sys.argv) == 4:
     lang = sys.argv[1]
