@@ -32,6 +32,21 @@ def readCols(cols_file):
         c+=1
     return i_to_cols, cols_to_i
 
+def parse_pod(pod):
+    pod_dict = {}
+    f = open(pod)
+    for l in f:
+        if l[0] != '#':
+            try:
+                fields = l.rstrip('\n').split(',')
+                url = fields[1]
+                vector = np.array([float(i) for i in fields[4].split()])
+                pod_dict[url] = vector
+            except:
+                pass
+    return pod_dict
+
+
 def cosine_similarity(v1, v2):
     if len(v1) != len(v2):
         return 0.0

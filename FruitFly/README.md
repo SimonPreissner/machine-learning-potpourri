@@ -18,10 +18,26 @@ The directory also contains test pairs from the [MEN similarity dataset](https:/
 
 To run the code, you need to enter the corpus you would like to test on, and the number of Kenyon cells you are going to use for the experiment. For instance, for the BNC space:
 
-    python3 projection.py bnc 8000
+    python3 projection.py bnc 8000 6 5
 
 Or for the Wikipedia space:
 
-    python3 projection.py wiki 4000
+    python3 projection.py wiki 4000 4 10
 
 The program returns the Spearman correlation with the MEN similarity data, as calculated a) from the raw frequency space; and b) after running the fly's random projections.
+
+
+### Tuning parameters
+
+First, get a sense for which parameters give best results on the MEN dataset, for both BNC and Wikipedia data. If you know how to code, you can do a random parameter search automatically. If not, just try different values manually and write down what you observe.
+
+
+### Analysing the results
+
+Compare results for the BNC and the Wikipedia data. You should see that results on the BNC are much better than on Wikipedia. Why is that?
+
+To help you with the analysis, you can print a verbose version of the random projections with the -v flag. E.g.:
+
+    python3 projection.py bnc 8000 6 1 -v
+
+This will print out the projection neurons that are most responsible for the activation in the Kenyon layer.
