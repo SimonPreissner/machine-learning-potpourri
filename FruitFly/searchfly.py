@@ -5,8 +5,8 @@ import numpy as np
 
 '''Parameter input'''
 
-if len(sys.argv) < 5:
-    print("\nUSAGE: python3 searchfly.py [pod-path] [num-kc] [size-proj] [percent-hash]\n\
+if len(sys.argv) < 6:
+    print("\nUSAGE: python3 searchfly.py [pod-path] [num-kc] [size-proj] [percent-hash] [url]\n\
     - pod-path: the location of the pod to process\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
@@ -67,7 +67,7 @@ for url in pod_space:
 
 
 test_url = random.choice(list(pod_space.keys()))
-test_url = "https://en.wikipedia.org/wiki/Hermione_Granger"
+test_url = sys.argv[5]
 print("TESTING ON:",test_url)
 print(utils.neighbours(pod_space,test_url,10),'\n')
 print(utils.neighbours(pod_space_hashed,test_url,10))

@@ -13,6 +13,7 @@ The cells in each semantic space are normalised co-occurrence frequencies *witho
 
 The directory also contains test pairs from the [MEN similarity dataset](https://staff.fnwi.uva.nl/e.bruni/MEN), both in lemmatised and natural forms.
 
+Finally, it contains a file *generic_pod.csv*, which is a compilation of around 2400 distributional web page signatures, in [PeARS](http://pearsearch.org) format. The web pages span various topics: Harry Potter, Star Wars, the Black Panther film, the Black Panther social rights movement, search engines and various small topics involving architecture.
 
 ### Running the fruit fly code
 
@@ -41,3 +42,10 @@ To help you with the analysis, you can print a verbose version of the random pro
     python3 projection.py bnc 8000 6 1 -v
 
 This will print out the projection neurons that are most responsible for the activation in the Kenyon layer.
+
+
+### Turning the fly into a search engine
+
+You can test the capability of the the fly's algorithm to return web pages that are similar to a given one (and crucially, dimensionality-reduced), by typing:
+
+    python3 searchfly.py data/generic_pod.csv 2000 6 5 https://en.wikipedia.org/wiki/Yahoo!
