@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix
 
-train1_size = 100
-train2_size = 100
 C = int(sys.argv[1])
 kernel = sys.argv[2]
 
@@ -56,6 +54,10 @@ while t1 not in topics:
 t2 = input("Enter topic 2: ")
 while t2 not in topics:
     t2 = input("Enter topic 2: ")
+
+print("\n")
+train1_size = int(input(t1+" has "+str(len(topic_dict[t1]))+" documents. How many do you want for training? "))
+train2_size = int(input(t2+" has "+str(len(topic_dict[t2]))+" documents. How many do you want for training? "))
 
 t1_train, t1_test, t1_training_urls, t1_test_urls = mk_arrays(topic_dict[t1], train1_size)
 t2_train, t2_test, t2_training_urls, t2_test_urls = mk_arrays(topic_dict[t2], train2_size)
