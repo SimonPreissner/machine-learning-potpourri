@@ -8,6 +8,10 @@ from sklearn.svm import SVC
 
 C = int(sys.argv[1])
 kernel = sys.argv[2]
+if len(sys.argv) > 4:
+    degree = int(sys.argv[3])
+else:
+    degree = 3
 
 def get_topics():
     topics = {}
@@ -77,7 +81,7 @@ y_train = mk_labels(train1_size, train2_size)
 X_test = np.concatenate([t1_test,t2_test])
 y_test = mk_labels(len(t1_test), len(t2_test))
 
-clf = SVC(C=C,verbose=True, kernel=kernel)
+clf = SVC(C=C,verbose=True, kernel=kernel, degree=degree)
 model = clf.fit(X_train,y_train)
 print(model)
 
@@ -89,7 +93,7 @@ print([training_urls[s] for s in clf.support_])
 
 mk_confusion_matrices(y_pred,y_test,t1,t2)
 
-if len(sys.argv) == 4 and sys.argv[3] == "--q":
+if len(sys.argv) > 3 and sys.argv[-1] == "--q":
     print("\n\n***")
     print("Now testing on real queries...")
     print("Class 1:",t1,"| Class 2:",t2)

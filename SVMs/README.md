@@ -20,7 +20,9 @@ Run the classifier with e.g.
 
     python3 doc_class.py 100 linear
 
-Instead of *linear*, you could also use *poly* for a polynomial kernel or *rbf* for an RBF Gaussian kernel. 100 is the C hyperparameter, which you can also change.
+Instead of *linear*, you could also use *poly* for a polynomial kernel or *rbf* for an RBF Gaussian kernel. 100 is the C hyperparameter, which you can also change. When using *poly*, you can indicate the degree of the polynomial with e.g.
+
+    python3 doc_class.py 100 poly 5
 
 The program will ask you to choose two topics out of a list (remember that SVMs are binary classifiers). For instance:
 
