@@ -1,18 +1,18 @@
 import os
 import sys
-from utils import parse_pod, plot_confusion_matrix
+from utils import parse_pod, mk_confusion_matrices, read_queries
 import numpy as np
 import random
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix
 
 C = int(sys.argv[1])
 kernel = sys.argv[2]
 
 def get_topics():
     topics = {}
-    files = [os.path.join('./data/', f) for f in os.listdir('./data/') if os.path.isfile(os.path.join('./data/', f))]
+    files = [os.path.join('./data/', f) for f in os.listdir('./data/') if os.path.isfile(os.path.join('./data/', f))\
+             and os.path.join('./data/', f)[-4:] == ".csv"]
     for f in files:
         pod_dict, topic = parse_pod(f)
         topics[topic] = pod_dict
@@ -39,7 +39,7 @@ def mk_labels(size1,size2):
     for i in range(size1):
         y.append(1)
     for i in range(size2):
-        y.append(-1)
+        y.append(2)
     y = np.array(y)
     return y
     
@@ -87,18 +87,14 @@ y_pred = clf.predict(X_test)
 print("\n\nPrinting support vectors...")
 print([training_urls[s] for s in clf.support_])
 
+mk_confusion_matrices(y_pred,y_test,t1,t2)
 
-# Compute confusion matrix
-cnf_matrix = confusion_matrix(y_test, y_pred)
-np.set_printoptions(precision=2)
-
-# Plot non-normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=[t1,t2], title='Confusion matrix, without normalization')
-
-# Plot normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=[t1,t2], normalize=True, title='Normalized confusion matrix')
-
-plt.show()
-
+if len(sys.argv) == 4 and sys.argv[3] == "--q":
+    print("\n\n***")
+    print("Now testing on real queries...")
+    print("Class 1:",t1,"| Class 2:",t2)
+    print("***\n")
+    queries = read_queries()
+    for q,v in queries.items():
+        #print(v[:10],t1_train[0][:10])
+        print(q,clf.predict(v.reshape(1,-1)))

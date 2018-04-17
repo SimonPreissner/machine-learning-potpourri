@@ -5,6 +5,13 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.decomposition import PCA
+from sklearn.metrics import confusion_matrix
+
+def normalise(v):
+    norm = np.linalg.norm(v)
+    if norm == 0:
+        return v
+    return v / norm
 
 def readDM(dm_file):
     dm_dict = {}
@@ -22,6 +29,19 @@ def readDM(dm_file):
         dm_dict[row]=vec
     return dm_dict
 
+def read_queries():
+    q_dict = {}
+    with open("data/queryvectors.txt") as f:
+        qlines=f.readlines()
+    f.close()
+
+    for l in qlines:
+        items=l.rstrip().split("::")
+        q=items[0]
+        vec=[float(i) for i in items[1].split()]
+        vec=normalise(np.array(vec))
+        q_dict[q]=vec
+    return q_dict
 
 def parse_pod(pod):
     pod_dict = {}
@@ -31,7 +51,7 @@ def parse_pod(pod):
             try:
                 fields = l.rstrip('\n').split(',')
                 url = fields[1]
-                vector = np.array([float(i) for i in fields[4].split()])
+                vector = normalise(np.array([float(i) for i in fields[4].split()]))
                 pod_dict[url] = vector
             except:
                 pass
@@ -80,7 +100,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
         print("Normalized confusion matrix")
     else:
         print('Confusion matrix, without normalization')
-
     print(cm)
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -100,6 +119,22 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+
+def mk_confusion_matrices(y_test, y_pred, t1, t2):
+    # Compute confusion matrix
+    cnf_matrix = confusion_matrix(y_test, y_pred)
+    np.set_printoptions(precision=2)
+
+    # Plot non-normalized confusion matrix
+    plt.figure()
+    plot_confusion_matrix(cnf_matrix, classes=[t1,t2], title='Confusion matrix, without normalization')
+    plt.savefig("confusion.png")
+
+    # Plot normalized confusion matrix
+    plt.figure()
+    plot_confusion_matrix(cnf_matrix, classes=[t1,t2], normalize=True, title='Normalized confusion matrix')
+    plt.savefig("confusion-norm.png")
+
 
 
 def make_figure(m_2d, labels):

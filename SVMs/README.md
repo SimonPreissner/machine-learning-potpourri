@@ -33,7 +33,7 @@ You can then choose how many training instances you want to use for each class. 
     star wars has 787 documents. How many do you want for training? 400
     star trek has 415 documents. How many do you want for training? 100
 
-We then get the output of the SVM, the score over the test data, and the URL corresponding to the support vectors for the classification.
+We then get the output of the SVM, the score over the test data, and the URL corresponding to the support vectors for the classification. Two confusion matrices will also be printed as .png in your directory, showing the errors made by the system (one version shows error frequencies, and the other percentages of errors).
 
 
 ### Inspecting support vectors
@@ -48,6 +48,16 @@ Open the web pages for a few support vectors. What do you notice?
 Try and play with the number of documents you use for training in each class. What do you notice? Is there a correlation between how balanced the training data is and how close the topics are? For instance, compare unbalanced training data in the case of *star wars* vs *star trek* and *star wars* vs *clunch*.
 
 
+### Analysing search engine queries
 
+Now, for the ultimate test... add the --q flag when you run the classifier:
+
+    python3 doc_class.py 100 linear --q
+
+This will output a set of queries, and which of the two chosen classes they were classified into. We are checking here whether, for the queries that are actually related to one of the two classes, the assignment is correct.
+
+Why do you think things work on such small `documents'? (Queries are only a few words long...)
+
+The vectors for documents and queries are normalised (see utils.py). Do you understand why?
 
 
