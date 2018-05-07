@@ -6,12 +6,14 @@ Typical language modeling examples involve generating Shakespeare. It is often d
 
 ASCII cats.
 
+```
       /\_/\
  /\  / o o \
-//\\ \~(\*)~/
-\`  \/   ^ /
+//\\ \~(*)~/
+`  \/   ^ /
    | \|| ||
    \ '|| ||
     \)()-())
+```
 
 (This  fine example is taken from [this awesome page](http://www.asciiworld.com/-Cats-.html).)
