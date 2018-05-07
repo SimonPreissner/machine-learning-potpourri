@@ -17,3 +17,32 @@ ASCII cats.
 ```
 
 (This  fine example is taken from [this awesome page](http://www.asciiworld.com/-Cats-.html).)
+
+## The data
+
+You have tiny data to play with, contained in the cat.txt file. The file basically contains the ASCII cat shown above.
+
+## Running the RNN cats
+
+Let's first run the program. It needs various parameters, in this form:
+
+    python3 cat-char-rnn.py cat.txt --seq_length=20 --hidden_size=200 --num_epochs=100 --lr=0.01
+
+If you run this, the RNN will try and learn how to draw the cat from the data in cat.txt, and attempt to regenerate it. With the above parameters, here is what the output might look like:
+
+```
+EPOCH 90
+----
+   \\  /~ || /\\  ) /|\  | o \~ /\~ \
+ /|    /
+_ \~ /|    ' |/|~ | ^ o   |
+
+||
+ \   |  ||  \~o/\~/\
+  
+----
+iter 360, loss: 45.598756
+----
+```
+
+This looks more like a splatter movie than a cat. Your job is to recover the cat by setting the network parameters right, and doing whatever else might be needed.
