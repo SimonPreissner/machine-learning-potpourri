@@ -45,7 +45,7 @@ iter 360, loss: 45.598756
 ----
 ```
 
-This looks more like a splatter movie than a cat. Your job is to recover the cat by setting the network parameters right, and doing whatever else might be needed.
+OK. This looks more like a splatter movie than a cat. Your job is to recover the cat by setting the network parameters right, and doing whatever else might be needed.
 
 
 ## Help! My cat does not have paws!
@@ -58,7 +58,7 @@ One way to reproduce the cat perfectly would be to fully memorise the drawing. T
 
 ## Embrace your evil scientist side
 
-Let's now see how well the RNN actually generalises. We'll expand our data with ascii-modified cats. For instance, three-eyed cats and whisker-less cats:
+Let's now see how well the RNN actually generalises. We'll expand our data with ascii-modified cats. For instance, three-eyed cats and whisker-less cats (creepy!):
 
 ```
       /\_/\
@@ -82,4 +82,4 @@ How is sampling impacted? Can you experiment further with different types of cat
 
 ## Expand your zoo
 
-The [ASCII art page]((http://www.asciiworld.com/) has lots more animals on offer. Go and pick some, and see which ones your RNN will be able to model and which not. Can you explain its behaviour?
+The [ASCII art page](http://www.asciiworld.com/) has lots more animals on offer. Go and pick some, and see which ones your RNN will be able to model and which not. Can you explain its behaviour?
