@@ -55,3 +55,31 @@ Look at your input data again. Imagine you're the RNN, with the current hyperpar
 ## Memorising the cat
 
 One way to reproduce the cat perfectly would be to fully memorise the drawing. This is not very interesting from the point of view of building a network that will generalise, but it is a good exercise to think about how this could be made to happen. How would you go about it? Do you have to change anything in the code itself? (Check how it samples the cat!) Is it possible?
+
+## Embrace your evil scientist side
+
+Let's now see how well the RNN actually generalises. We'll expand our data with ascii-modified cats. For instance, three-eyed cats and whisker-less cats:
+
+```
+      /\_/\
+ /\  / ooo \
+//\\ \~(*)~/
+`  \/   ^ /
+   | \|| ||
+   \ '|| ||
+    \)()-())
+
+      /\_/\
+ /\  / o o \
+//\\ \ (*) /
+`  \/   ^ /
+   | \|| ||
+   \ '|| ||
+    \)()-())
+```
+
+How is sampling impacted? Can you experiment further with different types of cats? (Be creative!) What happens with different sequence lengths? When do things break? 
+
+## Expand your zoo
+
+The [ASCII art page]((http://www.asciiworld.com/) has lots more animals on offer. Go and pick some, and see which ones your RNN will be able to model and which not. Can you explain its behaviour?
