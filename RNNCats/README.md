@@ -46,3 +46,12 @@ iter 360, loss: 45.598756
 ```
 
 This looks more like a splatter movie than a cat. Your job is to recover the cat by setting the network parameters right, and doing whatever else might be needed.
+
+
+## Help! My cat does not have paws!
+
+Look at your input data again. Imagine you're the RNN, with the current hyperparameters you are using. What happens when you get to the cat's paws in the data? Can you see what you would have to do to fix the problem?
+
+## Memorising the cat
+
+One way to reproduce the cat perfectly would be to fully memorise the drawing. This is not very interesting from the point of view of building a network that will generalise, but it is a good exercise to think about how this could be made to happen. How would you go about it? Do you have to change anything in the code itself? (Check how it samples the cat!) Is it possible?
