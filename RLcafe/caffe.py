@@ -68,10 +68,10 @@ for _ in range(500):
         cur_pos = next_state
     print("Reward:",episode_return,"\n")
 
-print(q_matrix)
+print(np.array(q_matrix).reshape(13,4))
 print("Training done...")
 
-print("Testing...")
+print("\n***\nTesting...\n***\n")
 # get starting place
 cur_pos = 0
 episode_return = 0
