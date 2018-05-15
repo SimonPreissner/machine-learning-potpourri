@@ -2,7 +2,19 @@
 
 ### Preliminaries: playing frozen lake
 
-To get you started with RL, play for a while with the Frozen Lake puzzle from the [OpenAI gym](https://gym.openai.com/envs/FrozenLake-v0/). A Q-table implementation that tackles the puzzle can be found [here](https://github.com/simoninithomas/Deep_reinforcement_learning_Course/blob/master/Q%20learning/Q%20Learning%20with%20FrozenLake.ipynb) as a Jupyter notebook. In this repo, you will also find a version of the same code that you can simply run from the terminal (frozen_lake.py).
+To get you started with RL, play for a while with the Frozen Lake puzzle from the [OpenAI gym](https://gym.openai.com/envs/FrozenLake-v0/). To run the code, you will need to install the OpenAI gym by running:
+
+`pip3 install --user gym`
+
+if you are under pythonanywhere, or
+
+`sudo pip3 install gym`
+
+if you are under your own environment.
+
+A Q-table implementation that tackles the puzzle can be found [here](https://github.com/simoninithomas/Deep_reinforcement_learning_Course/blob/master/Q%20learning/Q%20Learning%20with%20FrozenLake.ipynb) as a Jupyter notebook. In this repo, you will also find a version of the same code that you can simply run from the terminal:
+
+`python3 frozen_lake.py`
 
 Understand the environment and the steps taken by the algorithm. Try to modify the parameters to see their influence on the result.
 
