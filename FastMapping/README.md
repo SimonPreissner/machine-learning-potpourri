@@ -4,16 +4,20 @@ In this tutorial, you are provided with the definitional dataset of [Herbelot & 
 
 You are to run an addition model over that dataset and provide a thorough error analysis, as well as recommendations for improvement.
 
-A background semantic space is provided in *spaces*. Note that this is only a toy space containing around 4800 entries.
+A background semantic space is provided in *spaces*. Note that this is only a toy space containing around 4800 entries. It needs to be unpacked with
+
+`tar -xzf ukwac_reduced.tar.gz`
+
+(to be run in the *spaces* directory).
 
 
 ### Running the addition model
 
 You can run a simple addition model, with stopword list, by doing
 
-`python3 test_def_nonces.py spaces/ukwac_reduced.txt definitions/nonce.definitions.300.test`
+`python3 test_def_nonces.py spaces/ukwac_reduced.txt definitions/nonce.definitions.300.test > results.txt`
 
-Note the final MRR and average rank of the predicted vectors. Get familiar with the type of nearest neighbours returned by the system.
+Look at the file results.txt. Note the final MRR and average rank of the predicted vectors. Get familiar with the type of nearest neighbours returned by the system.
 
 Check also the effect of the stopwords on results, by removing the filter in *utils.py* (function *centroid*) and re-running the test.
 
