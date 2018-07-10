@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 
 C = int(sys.argv[1])
 kernel = sys.argv[2]
-if len(sys.argv) > 4:
+if len(sys.argv) >= 4:
     degree = int(sys.argv[3])
 else:
     degree = 3
