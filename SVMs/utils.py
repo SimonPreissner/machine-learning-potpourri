@@ -1,175 +1,206 @@
 import numpy as np
-import itertools
+from itertools import product
 from math import sqrt
 from matplotlib import cm
 import matplotlib.pyplot as plt
-import pandas as pd
+from pandas import DataFrame
 from sklearn.decomposition import PCA
 from sklearn.metrics import confusion_matrix
 
-def normalise(v):
-    norm = np.linalg.norm(v)
-    if norm == 0:
-        return v
-    return v / norm
+def show_help():
+#display help message in terminal
+	out = ''
+	with open('helpfile', 'r') as f:
+		for line in f:
+			out += line
+	return out
 
-def readDM(dm_file):
-    dm_dict = {}
-    version = ""
-    with open(dm_file) as f:
-        dmlines=f.readlines()
-    f.close()
+def get_data(source):
+#serve a dictionary topic:vector
+	out = {}
+	for f in source:
+		pod_dict, topic = parse_pod(f)
+		out[topic] = pod_dict
+	return out
 
-    #Make dictionary with key=row, value=vector
-    for l in dmlines:
-        items=l.rstrip().split()
-        row=items[0]
-        vec=[float(i) for i in items[1:]]
-        vec=np.array(vec)
-        dm_dict[row]=vec
-    return dm_dict
+def format_topics(lst):
+#serve str with list of available topics
+	out = ''
+	for item in lst:
+		out += item + ', '
+	return out[:-2] + '.'
 
-def read_queries():
-    q_dict = {}
-    with open("data/queryvectors.txt") as f:
-        qlines=f.readlines()
-    f.close()
+def get_topic(string, lst, n):
+#parse and check user input
+	firsttime = True
+	while string not in lst:
+		if not firsttime:
+			print('Topic not present. Please enter another topic.')
+		string = input('Enter topic ' + str(n) + ': ')
+		firsttime = False
+	return string
 
-    for l in qlines:
-        items=l.rstrip().split("::")
-        q=items[0]
-        vec=[float(i) for i in items[1].split()]
-        vec=normalise(np.array(vec))
-        q_dict[q]=vec
-    return q_dict
+def get_train_size(topic, dic):
+#parse and check user input
+	tot = len(dic)
+
+	s = f'{topic} has {str(tot)} documents. How many for training? '
+	err = 'Too many. Please enter a lower number.\n'
+
+	firsttime = True
+	while True:
+		n = int(input(s if firsttime else err + s))
+		firsttime = False
+		if n < tot:
+			return n
+
+def make_arrays(space, n):
+#serve numpy arrays and source urls for SVM
+	training = []
+	training_urls = []
+	test = []
+	test_urls = []
+	c = 0
+
+	for key, value in space.items():
+		if c < n:
+			training.append(value)
+			training_urls.append(key)
+			c += 1
+		else:
+			test.append(value)
+			test_urls.append(key)
+	return np.array(training), np.array(test), training_urls, test_urls
+
+def make_labels(size1, size2):
+	out = []
+	for i in range(size1):
+		out.append(1)
+	for i in range(size2):
+		out.append(2)
+	return np.array(out)
+
+def normalize(vec):
+#calc normalized vector
+	norm = np.linalg.norm(vec)
+	if norm == 0:
+		return vec 
+	return vec / norm
+
+def get_queries(f):
+#create dict of lemma:vector
+	out = {}
+	with open(f, 'r') as f:
+		lines = f.readlines()
+
+	for line in lines:
+		line  = line.rstrip().split('::')
+		lemma = line[0]
+		vec   = normalize(np.array([float(i) \
+			for i in line[1].split()]))
+		out[lemma] = vec
+
+	return out
 
 def parse_pod(pod):
-    pod_dict = {}
-    f = open(pod)
-    for l in f:
-        if l[0] != '#':
-            try:
-                fields = l.rstrip('\n').split(',')
-                url = fields[1]
-                vector = normalise(np.array([float(i) for i in fields[4].split()]))
-                pod_dict[url] = vector
-            except:
-                pass
-        else:
-            if "Pod name" in l:
-                topic = l[10:].rstrip('\n')
-    return pod_dict, topic
+#get data from csv file
+	pod_dict = {}
+	
+	with open(pod) as f:
+		for line in f:
+			if line[0] != '#':
+				try:
+					fields = line.rstrip('\n').split(',')
+					url = fields[1]
+					vector = normalize(np.array([float(i) \
+						for i in fields[4].split()]))
+					pod_dict[url] = vector
+				except:
+					pass
+			else:
+				if "Pod name" in line:
+					topic = line[10:].rstrip('\n')
+	return pod_dict, topic
 
+def plot_confmat(cm, classes, normalized, \
+	title = 'Confusion matrix', cmap = plt.cm.Blues):
 
-def cosine_similarity(v1, v2):
-    if len(v1) != len(v2):
-        return 0.0
-    num = np.dot(v1, v2)
-    den_a = np.dot(v1, v1)
-    den_b = np.dot(v2, v2)
-    return num / (sqrt(den_a) * sqrt(den_b))
+	if normalized:
+		cm = cm.astype('float') / cm.sum(axis = 1)[:, np.newaxis]
+		print('Normalized confusion matrix:')
+	else:
+		print('Confusion matrix, without normalization:')
+	print(cm)
+	print()
 
+	plt.imshow(cm, interpolation = 'nearest', cmap = cmap)
+	plt.title(title)
+	plt.colorbar()
+	tick_marks = np.arange(len(classes))
+	plt.xticks(tick_marks, classes, rotation = 45)
+	plt.yticks(tick_marks, classes)
 
-def neighbours(dm_dict,word,n):
-    cosines={}
-    c=0
-    vec = dm_dict[word]
-    for k,v in dm_dict.items():
-        cos = cosine_similarity(vec, v)
-        cosines[k]=cos
-        c+=1
-    c=0
-    neighbours = []
-    for t in sorted(cosines, key=cosines.get, reverse=True):
-        if c<n:
-             #print(t,cosines[t])
-             neighbours.append(t)
-             c+=1
-        else:
-            break
-    return neighbours
+	fmt = '.2f' if normalized else 'd'
+	threshold = cm.max() / 2
+	for i, j in product(range(cm.shape[0]), range(cm.shape[1])):
+		plt.text(j, i, format(cm[i, j], fmt), \
+		horizontalalignment = 'center', \
+                color = 'white' if cm[i, j] > threshold else 'black')
 
+	plt.tight_layout()
+	plt.ylabel('True label')
+	plt.xlabel('Predicted label')
 
-def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
-    """
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
-    else:
-        print('Confusion matrix, without normalization')
-    print(cm)
+def make_confmat(y_test, y_pred, t1, t2):
+	#compute confusion matrix
+	cm = confusion_matrix(y_test, y_pred)
+	np.set_printoptions(precision = 2)
 
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+	#plot non-normalized confusion matrix
+	plt.figure()
+	plot_confmat(cm, classes = [t1,t2], normalized = False, \
+		title = 'Confusion matrix, without normalization')
+	plt.savefig("confusion.png")
 
-    fmt = '.2f' if normalize else 'd'
-    thresh = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-
-def mk_confusion_matrices(y_test, y_pred, t1, t2):
-    # Compute confusion matrix
-    cnf_matrix = confusion_matrix(y_test, y_pred)
-    np.set_printoptions(precision=2)
-
-    # Plot non-normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=[t1,t2], title='Confusion matrix, without normalization')
-    plt.savefig("confusion.png")
-
-    # Plot normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=[t1,t2], normalize=True, title='Normalized confusion matrix')
-    plt.savefig("confusion-norm.png")
-
-
+	#plot normalized confusion matrix
+	plt.figure()
+	plot_confmat(cm, classes = [t1,t2], normalized = True, \
+		title = 'Normalized confusion matrix')
+	plt.savefig("confusion-norm.png")
 
 def make_figure(m_2d, labels):
-    cmap = cm.get_cmap('nipy_spectral')
+	cmap = cm.get_cmap('nipy_spectral')
 
-    existing_m_2d = pd.DataFrame(m_2d)
-    existing_m_2d.index = labels
-    existing_m_2d.columns = ['PC1','PC2']
-    existing_m_2d.head()
+	existing_m_2d = DataFrame(m_2d)
+	existing_m_2d.index = labels
+	existing_m_2d.columns = ['PC1','PC2']
+	existing_m_2d.head()
 
-    ax = existing_m_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(30,18), c=range(len(existing_m_2d)), colormap=cmap, linewidth=0, legend=False)
-    ax.set_xlabel("A dimension of meaning")
-    ax.set_ylabel("Another dimension of meaning")
+	ax = existing_m_2d.plot(kind = 'scatter', x = 'PC2', y = 'PC1', \
+		figsize = (30, 18), c = range(len(existing_m_2d)), \
+		colormap = cmap, linewidth = 0, legend = False)
+	ax.set_xlabel("A dimension of meaning")
+	ax.set_ylabel("Another dimension of meaning")
 
-    for i, word in enumerate(existing_m_2d.index):
-        #print(word+" "+str(existing_m_2d.iloc[i].PC2)+" "+str(existing_m_2d.iloc[i].PC1))
-        ax.annotate(
-            word,
-            (existing_m_2d.iloc[i].PC2, existing_m_2d.iloc[i].PC1), color='black', size='large', textcoords='offset points')
+	for i, word in enumerate(existing_m_2d.index):
+		ax.annotate(word, \
+		(existing_m_2d.iloc[i].PC2, existing_m_2d.iloc[i].PC1), \
+		color = 'black', size = 'large', textcoords = 'offset points')
 
-    fig = ax.get_figure()
-    return fig
-
+	out = ax.get_figure()
+	return out
 
 def run_PCA(dm_dict, words, savefile):
-    m = []
-    labels = []
-    for w in words:
-        labels.append(w)
-        m.append(dm_dict[w])
-    pca = PCA(n_components=2)
-    pca.fit(m)
-    m_2d = pca.transform(m)
-    png = make_figure(m_2d,labels)
-    cax = png.get_axes()[1]
-    cax.set_visible(False)
-    png.savefig(savefile)
+	m = []
+	labels = []
+	for word in words:
+		labels.append(word)
+		m.append(dm_dict[word])
 
+	pca = PCA(n_components = 2)
+	pca.fit(m)
+	m_2d = pca.transform(m)
+	png = make_figure(m_2d,labels)
+	cax = png.get_axes()[1]
+	cax.set_visible(False)
+	png.savefig(savefile)

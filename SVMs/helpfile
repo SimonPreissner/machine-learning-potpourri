@@ -1,0 +1,11 @@
+SVM Tutorial.
+Usage: ptyhon3 doc_class.py [C [kernel [degree [OPTION(S)]]]]
+
+C and kernel are the only mandatory arguments.
+Degree defaults at 3 if omitted.
+
+Available options:
+-q, --real-queries     Tests on real queries after calculating
+                         the confusion matrix.
+-s, --show-urls        Shows training URLs. Very long output.
+-h, --help             This help text.
