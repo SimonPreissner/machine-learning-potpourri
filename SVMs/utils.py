@@ -7,18 +7,10 @@ from pandas import DataFrame
 from sklearn.decomposition import PCA
 from sklearn.metrics import confusion_matrix
 
-def show_help():
-#display help message in terminal
-	out = ''
-	with open('helpfile', 'r') as f:
-		for line in f:
-			out += line
-	return out
-
-def get_data(source):
-#serve a dictionary topic:vector
+def get_data(lst):
+#get a list of filepaths & serve a dictionary topic:vector
 	out = {}
-	for f in source:
+	for f in lst:
 		pod_dict, topic = parse_pod(f)
 		out[topic] = pod_dict
 	return out
@@ -95,9 +87,11 @@ def get_queries(f):
 
 	for line in lines:
 		line  = line.rstrip().split('::')
+		#line  = line.rstrip().split(' ')
 		lemma = line[0]
 		vec   = normalize(np.array([float(i) \
 			for i in line[1].split()]))
+		#vec   = normalize(np.array([int(i) for i in lines[1:]]))
 		out[lemma] = vec
 
 	return out

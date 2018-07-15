@@ -6,7 +6,8 @@ from utils import *
 
 #show help
 if '-h' in argv or '--help' in argv:
-	print(show_help())
+	with open('helpfile', 'r') as f:
+		print(f.read())
 	exit()
 
 #input args
