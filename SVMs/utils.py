@@ -36,7 +36,8 @@ def get_train_size(topic, dic):
 #parse and check user input
 	tot = len(dic)
 
-	s = f'{topic} has {str(tot)} documents. How many for training? '
+	s = '{} has {} docs. '.format(topic, str(tot)) + \
+		'How many for training? '
 	err = 'Too many. Please enter a lower number.\n'
 
 	firsttime = True

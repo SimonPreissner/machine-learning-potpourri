@@ -29,7 +29,7 @@ topic_dict = get_data(files)
 
 #get user-selected topics
 topics = list(topic_dict.keys())
-print(f'Available topics:\n{format_topics(topics)}\n')
+print('Available topics:\n{}\n'.format(format_topics(topics)))
 t1 = t2 = ''
 t1 = get_topic(t1, topics, 1)
 t2 = get_topic(t2, topics, 2)
@@ -51,10 +51,10 @@ test1_size = len(t1_test)
 test2_size = len(t2_test)
 
 #print on topic-wise size of sets
-print(f'Topic 1: Train size: {train1_size} ' + \
-	f'| Test size: {test1_size}\n' + \
-	f'Topic 2: Train size: {train2_size} ' + \
-	f'| Test size: {test2_size}\n')
+print('Topic 1: Train size: {} | Test size: {}\n' \
+	.format(train1_size, test1_size) + \
+	'Topic 2: Train size: {} | Test size: {}\n' \
+	.format(train2_size, test2_size))
 	
 #prepare train/test sets
 x_train = concatenate([t1_train, t2_train])
@@ -64,9 +64,9 @@ y_test  = make_labels(test1_size,  test2_size)
 
 #setup SVM setup and print output
 print('SVC output:')
-clf = SVC(C = C, verbose = True, kernel = kernel, degree = degree) #prints data
-model = clf.fit(x_train, y_train)
-score = clf.score(x_test, y_test)
+clf    = SVC(C = C, verbose = True, kernel = kernel, degree = degree) #prints data
+model  = clf.fit(x_train, y_train)
+score  = clf.score(x_test, y_test)
 y_pred = clf.predict(x_test)
 
 print('\n') #needed because SVC prints output in a weird way
@@ -74,7 +74,7 @@ print('SVC Model:')
 print(model)
 print()
 
-print(f'Score: {score}\n')
+print('Score: {}\n'.format(score))
 
 if showurls: #very annoying output
 	print('Training urls:')
@@ -86,7 +86,8 @@ make_confmat(y_pred, y_test, t1, t2) #prints some data
 
 #test on real queries
 if len(argv) > 3 and realtest:
-	print(f'Test on real queries:\n(Topic 1: {t1} | Topic 2: {t2})\n')
+	print('Test on real queries:\n' + \
+		'(Topic 1: {} | Topic 2: {})\n'.format(t1, t2))
 	queries = get_queries('data/queryvectors.txt') #dict
 	for key, value in queries.items():
 		print(key, clf.predict(value.reshape(1, -1)))
