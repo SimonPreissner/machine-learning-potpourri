@@ -1,8 +1,9 @@
 SVM Tutorial.
-Usage: ptyhon3 doc_class.py [C [kernel [degree [OPTION(S)]]]]
+Usage: ptyhon3 doc_class.py [C [kernel [degree [OPTIONS]]]]
 
 C and kernel are the only mandatory arguments.
 Degree defaults at 3 if omitted.
+Please note that flags must be added AFTER the other arguments.
 
 Available options:
 -q, --real-queries     Tests on real queries after calculating

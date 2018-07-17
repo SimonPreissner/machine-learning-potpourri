@@ -13,9 +13,10 @@ if '-h' in argv or '--help' in argv:
 #input args
 C       = int(argv[1])
 kernel  = argv[2]
-degree  = 3 #default
-if len(argv) > 3 and type(argv[3]) is int:
+try: #if argv[3] is a number
 	degree  = int(argv[3])
+except: #if argv[3] is a flag or is missing
+	degree  = 3 #default
 
 #input flags
 showurls = True if '-s' in argv or '--show-urls' in argv else False
