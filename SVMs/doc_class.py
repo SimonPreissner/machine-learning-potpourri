@@ -13,7 +13,11 @@ if '-h' in argv or '--help' in argv:
 #input args
 C       = int(argv[1])
 kernel  = argv[2]
-degree  = int(argv[3]) if len(argv) > 3 else 3
+degree  = 3 #default
+if len(argv) > 3 and type(argv[3]) is int:
+	degree  = int(argv[3])
+
+#input flags
 showurls = True if '-s' in argv or '--show-urls' in argv else False
 realtest = True if '-q' in argv or '--real-queries' in argv else False
 
