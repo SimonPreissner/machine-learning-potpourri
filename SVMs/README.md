@@ -52,9 +52,9 @@ Try and play with the number of documents you use for training in each class. Wh
 
 ### Analysing search engine queries
 
-Now, for the ultimate test... add the --q flag when you run the classifier:
+Now, for the ultimate test... add the -q (or --real-queries) flag when you run the classifier:
 
-    python3 doc_class.py 100 linear --q
+    python3 doc_class.py 100 linear -q
 
 This will output a set of queries, and which of the two chosen classes they were classified into. We are checking here whether, for the queries that are actually related to one of the two classes, the assignment is correct.
 
